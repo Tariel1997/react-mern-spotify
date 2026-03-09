@@ -1,0 +1,10 @@
+node_modules
+dist
+frontend/dist
+.env
+.git
+package-lock.json
+frontend/public
+*.png
+*.jpg
+*.svg
