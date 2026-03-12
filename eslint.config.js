@@ -62,6 +62,8 @@ export default defineConfig([
   {
     plugins: { prettier: prettierPlugin },
     rules: {
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       // 'prettier/prettier': 'warn',
     },
   },
