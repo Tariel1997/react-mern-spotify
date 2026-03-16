@@ -1,5 +1,6 @@
 import path from 'path'
 import { clerkMiddleware } from '@clerk/express'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import fileupload from 'express-fileupload'
@@ -17,6 +18,13 @@ dotenv.config()
 const __dirname = path.resolve()
 const app = express()
 const PORT = process.env.PORT || 5001
+
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  }),
+)
 
 app.use(express.json())
 app.use(clerkMiddleware())
@@ -38,6 +46,8 @@ app.use('/api/albums', albumRoutes)
 app.use('/api/stats', statRoutes)
 
 app.use((err, req, res, _next) => {
+  console.error('Error in server', err)
+
   res.status(500).json({
     message:
       process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
