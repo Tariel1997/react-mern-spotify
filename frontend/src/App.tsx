@@ -1,3 +1,4 @@
+import AlbumPage from '@/pages/album/AlbumPage.tsx'
 import { AuthenticateWithRedirectCallback } from '@clerk/react'
 import { Route, Routes } from 'react-router-dom'
 
@@ -23,6 +24,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/chat" element={<ChatPage />} />
+          <Route path="/albums/:albumId" element={<AlbumPage />} />
         </Route>
       </Routes>
     </>
