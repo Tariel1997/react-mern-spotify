@@ -25,7 +25,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       const response = await axiosInstance.get('/admin/check')
       set({ isAdmin: response.data.admin, isLoaded: true })
     } catch (error: unknown) {
-      // set({ isAdmin: false, error: error.response?.data?.message, isLoaded: true })
       if (error instanceof AxiosError) {
         set({ error: error.response?.data?.message, isAdmin: false, isLoaded: true })
       }

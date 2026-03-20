@@ -3,6 +3,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable'
+import AudioPlayer from '@/layout/components/AudioPlayer.tsx'
 import FriendsActivity from '@/layout/components/FriendsActivity.tsx'
 import { Outlet } from 'react-router-dom'
 
@@ -17,6 +18,8 @@ const MainLayout = () => {
         direction="horizontal"
         className="flex-1 flex h-full overflow-hidden p-2"
       >
+        <AudioPlayer />
+
         {/* Left sidebar */}
         <ResizablePanel defaultSize={20} minSize={isMobile ? 0 : 10} maxSize={30}>
           <LeftSidebar />
