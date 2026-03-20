@@ -1,4 +1,5 @@
 import { axiosInstance } from '@/lib/axios.ts'
+import { AxiosError } from 'axios'
 import { create } from 'zustand'
 
 interface ChatStore {
@@ -22,8 +23,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     try {
       const response = await axiosInstance.get('/users')
       set({ users: response.data })
-    } catch (error: any) {
-      set({ error: error.response?.data?.message })
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        set({ error: error.response?.data?.message })
+      }
     } finally {
       set({ isLoading: false })
     }

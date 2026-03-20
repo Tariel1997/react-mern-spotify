@@ -55,8 +55,10 @@ export const useMusicStore = create<MusicStore>((set, get) => ({
         madeForYouSongs: madeForYou.data,
         trendingSongs: trending.data,
       })
-    } catch (error: any) {
-      set({ error: error.response?.data?.message || 'Error fetching home data' })
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        set({ error: error.response?.data?.message || 'Error fetching home data' })
+      }
     } finally {
       set({ isLoading: false })
     }
@@ -102,8 +104,10 @@ export const useMusicStore = create<MusicStore>((set, get) => ({
     try {
       const response = await axiosInstance.get('/songs/featured')
       set({ featuredSongs: response.data })
-    } catch (error: any) {
-      set({ error: error.response?.data?.message })
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        set({ error: error.response?.data?.message })
+      }
     } finally {
       set({ isLoading: false })
     }
@@ -117,8 +121,10 @@ export const useMusicStore = create<MusicStore>((set, get) => ({
     try {
       const response = await axiosInstance.get('/songs/made-for-you')
       set({ madeForYouSongs: response.data })
-    } catch (error: any) {
-      set({ error: error.response?.data?.message })
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        set({ error: error.response?.data?.message })
+      }
     } finally {
       set({ isLoading: false })
     }
@@ -132,8 +138,10 @@ export const useMusicStore = create<MusicStore>((set, get) => ({
     try {
       const response = await axiosInstance.get('/songs/trending')
       set({ trendingSongs: response.data })
-    } catch (error: any) {
-      set({ error: error.response?.data?.message })
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        set({ error: error.response?.data?.message })
+      }
     } finally {
       set({ isLoading: false })
     }
