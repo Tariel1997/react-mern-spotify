@@ -8,12 +8,16 @@ interface ChatStore {
   error: string | null
 }
 
-export const useChatStore = create<ChatStore>((set) => ({
+export const useChatStore = create<ChatStore>((set, get) => ({
   users: [],
   isLoading: false,
   error: null,
 
   fetchUsers: async () => {
+    if (get().users.length > 0 || get().isLoading) return
+
+    console.time('Network request')
+
     set({ isLoading: true, error: null })
     try {
       const response = await axiosInstance.get('/users')
@@ -23,5 +27,7 @@ export const useChatStore = create<ChatStore>((set) => ({
     } finally {
       set({ isLoading: false })
     }
+
+    console.timeEnd('Network request')
   },
 }))
