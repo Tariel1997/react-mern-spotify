@@ -3,17 +3,29 @@ import { ScrollArea } from '@/components/ui/scroll-area.tsx'
 import FeaturedSection from '@/pages/home/components/FeaturedSection.tsx'
 import SectionGrid from '@/pages/home/components/SectionGrid.tsx'
 import { useMusicStore } from '@/stores/useMusicStore.ts'
+import { usePlayerStore } from '@/stores/usePlayerStore.ts'
 import { useEffect } from 'react'
 
 const HomePage = () => {
   const { fetchHomeData, isLoading, madeForYouSongs, featuredSongs, trendingSongs } =
     useMusicStore()
 
+  const { initializeQueue } = usePlayerStore()
+
   useEffect(() => {
-    fetchHomeData()
+    void fetchHomeData()
   }, [fetchHomeData])
 
-  console.log({ isLoading, featuredSongs, madeForYouSongs, trendingSongs })
+  useEffect(() => {
+    if (
+      madeForYouSongs.length > 0 &&
+      featuredSongs.length > 0 &&
+      trendingSongs.length > 0
+    ) {
+      const allSongs = [...featuredSongs, ...madeForYouSongs, ...trendingSongs]
+      initializeQueue(allSongs)
+    }
+  }, [initializeQueue, madeForYouSongs, trendingSongs, featuredSongs])
 
   return (
     <main

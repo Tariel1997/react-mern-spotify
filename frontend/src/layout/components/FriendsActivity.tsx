@@ -11,7 +11,7 @@ const FriendsActivity = () => {
   const { user } = useUser()
 
   useEffect(() => {
-    if (user) fetchUsers()
+    if (user) void fetchUsers()
   }, [fetchUsers, user])
 
   const isPlaying = false
