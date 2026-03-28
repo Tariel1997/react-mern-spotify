@@ -30,7 +30,7 @@ const AuthCallbackPage = () => {
       }
     }
 
-    syncUser()
+    void syncUser()
   }, [isLoaded, user, navigate])
 
   return (

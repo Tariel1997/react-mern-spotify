@@ -93,7 +93,7 @@ const AlbumPage = () => {
                 <div>Title</div>
                 <div>Released Date</div>
                 <div>
-                  <Clock className="h-4 w-4" />
+                  <Clock className="size-4" />
                 </div>
               </div>
 
@@ -117,7 +117,7 @@ const AlbumPage = () => {
                             <span className={'group-hover:hidden'}>{index + 1}</span>
                           )}
                           {!isCurrentSong && (
-                            <Play className="h-4 w-4 hidden group-hover:block" />
+                            <Play className="size-4 hidden group-hover:block" />
                           )}
                         </div>
 

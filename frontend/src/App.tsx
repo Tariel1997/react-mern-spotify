@@ -1,6 +1,7 @@
 import AdminPage from '@/pages/admin/AdminPage.tsx'
 import AlbumPage from '@/pages/album/AlbumPage.tsx'
 import { AuthenticateWithRedirectCallback } from '@clerk/react'
+import { Toaster } from 'react-hot-toast'
 import { Route, Routes } from 'react-router-dom'
 
 import MainLayout from './layout/MainLayout'
@@ -29,6 +30,8 @@ function App() {
           <Route path="/albums/:albumId" element={<AlbumPage />} />
         </Route>
       </Routes>
+
+      <Toaster />
     </>
   )
 }
