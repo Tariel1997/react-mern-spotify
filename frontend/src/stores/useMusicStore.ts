@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/lib/axios.ts'
-import { Album, Song } from '@/types'
+import { Album, Song, Stats } from '@/types'
 import { AxiosError } from 'axios'
 import { create } from 'zustand'
 
@@ -12,6 +12,7 @@ interface MusicStore {
   featuredSongs: Song[]
   madeForYouSongs: Song[]
   trendingSongs: Song[]
+  stats: Stats
 
   fetchAlbums: () => Promise<void>
   fetchAlbumById: (_id: string) => Promise<void>
@@ -19,6 +20,8 @@ interface MusicStore {
   fetchFeaturedSongs: () => Promise<void>
   fetchMadeForYouSongs: () => Promise<void>
   fetchTrendingSongs: () => Promise<void>
+  fetchStats: () => Promise<void>
+  fetchSongs: () => Promise<void>
 }
 
 export const useMusicStore = create<MusicStore>((set, get) => ({
@@ -30,6 +33,12 @@ export const useMusicStore = create<MusicStore>((set, get) => ({
   madeForYouSongs: [],
   featuredSongs: [],
   trendingSongs: [],
+  stats: {
+    totalSongs: 0,
+    totalAlbums: 0,
+    totalUsers: 0,
+    totalArtists: 0,
+  },
 
   fetchHomeData: async () => {
     const { featuredSongs, trendingSongs, madeForYouSongs } = get()
@@ -58,6 +67,37 @@ export const useMusicStore = create<MusicStore>((set, get) => ({
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         set({ error: error.response?.data?.message || 'Error fetching home data' })
+      }
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
+  fetchSongs: async () => {
+    set({ isLoading: true, error: null })
+
+    try {
+      const response = await axiosInstance.get('/songs')
+      set({ songs: response.data })
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        set({ error: error.response?.data?.message })
+      }
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
+  fetchStats: async () => {
+    set({ isLoading: true, error: null })
+
+    try {
+      const response = await axiosInstance.get('/stats')
+      set({ stats: response.data })
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        console.error('Error fetching stats', error)
+        set({ error: error.response?.data?.message })
       }
     } finally {
       set({ isLoading: false })

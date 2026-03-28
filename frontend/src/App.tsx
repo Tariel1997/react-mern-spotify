@@ -1,3 +1,4 @@
+import AdminPage from '@/pages/admin/AdminPage.tsx'
 import AlbumPage from '@/pages/album/AlbumPage.tsx'
 import { AuthenticateWithRedirectCallback } from '@clerk/react'
 import { Route, Routes } from 'react-router-dom'
@@ -20,6 +21,7 @@ function App() {
           }
         />
         <Route path="/auth-callback" element={<AuthCallbackPage />} />
+        <Route path="/admin" element={<AdminPage />} />
 
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
