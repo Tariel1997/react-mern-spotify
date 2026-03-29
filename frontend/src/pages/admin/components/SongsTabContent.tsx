@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button.tsx'
 import {
   Card,
   CardContent,
@@ -6,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card.tsx'
+import AddSongDialog from '@/pages/admin/components/AddSongDialog.tsx'
 import SongsTable from '@/pages/admin/components/SongsTable.tsx'
 import { Music } from 'lucide-react'
 
@@ -23,7 +23,7 @@ const SongsTabContent = () => {
             <CardDescription>Manage your music tracks</CardDescription>
           </div>
 
-          <Button>+</Button>
+          <AddSongDialog />
         </div>
       </CardHeader>
 
