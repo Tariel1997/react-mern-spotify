@@ -77,8 +77,12 @@ export const deleteSong = async (req, res, next) => {
 
 export const createAlbum = async (req, res, next) => {
   try {
+    if (!req.files || !req.files.imageFile) {
+      return res.status(400).json({ message: 'Image file is required' })
+    }
+
     const { title, artist, releaseYear } = req.body
-    const imageFile = req.files
+    const imageFile = req.files.imageFile
 
     const imageUrl = await uploadToCloudinary(imageFile)
 
