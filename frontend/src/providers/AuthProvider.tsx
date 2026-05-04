@@ -1,13 +1,15 @@
 import { axiosInstance } from '@/lib/axios'
 import { useAuthStore } from '@/stores/useAuthStore.ts'
+import { useChatStore } from '@/stores/useChatStore.ts'
 import { useAuth } from '@clerk/react'
 import { Loader } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { getToken } = useAuth()
+  const { getToken, userId } = useAuth()
   const [loading, setLoading] = useState(true)
   const { checkAdminStatus } = useAuthStore()
+  const { initSocket, disconnectSocket } = useChatStore()
 
   useEffect(() => {
     const requestInterceptor = axiosInstance.interceptors.request.use(
@@ -32,6 +34,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         if (token) {
           await checkAdminStatus()
+
+          // Init socket
+          if (userId) initSocket(userId)
         }
       } catch (error) {
         console.log('Error in auth provider', error)
@@ -42,8 +47,11 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     void initAuth()
 
-    return () => axiosInstance.interceptors.request.eject(requestInterceptor)
-  }, [getToken, checkAdminStatus])
+    return () => {
+      axiosInstance.interceptors.request.eject(requestInterceptor)
+      disconnectSocket()
+    }
+  }, [getToken, checkAdminStatus, userId, initSocket, disconnectSocket])
 
   if (loading)
     return (
