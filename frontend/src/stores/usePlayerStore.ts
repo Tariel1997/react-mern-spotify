@@ -1,3 +1,4 @@
+import { useChatStore } from '@/stores/useChatStore.ts'
 import { Song } from '@/types'
 import { create } from 'zustand'
 
@@ -15,6 +16,22 @@ interface PlayerStore {
   playPrevious: () => void
 }
 
+interface SocketAuth {
+  userId: string
+}
+
+const updateActivity = (activity: string) => {
+  const socket = useChatStore.getState().socket
+  const auth = socket?.auth as SocketAuth | undefined
+
+  if (auth?.userId) {
+    socket?.emit('update_activity', {
+      userId: auth.userId,
+      activity: activity,
+    })
+  }
+}
+
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
   currentSong: null,
   isPlaying: false,
@@ -28,10 +45,13 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       currentIndex: get().currentIndex === -1 ? 0 : get().currentIndex,
     })
   },
+
   playAlbum: (songs: Song[], startIndex = 0) => {
     if (songs.length === 0) return
 
     const song = songs[startIndex]
+
+    updateActivity(`Playing ${song.title} by ${song.artist}`)
 
     set({
       queue: songs,
@@ -44,6 +64,8 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   setCurrentSong: (song: Song | null) => {
     if (!song) return
 
+    updateActivity(`Playing ${song.title} by ${song.artist}`)
+
     const songIndex = get().queue.findIndex((s) => s._id === song._id)
 
     set({
@@ -55,6 +77,13 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 
   togglePlay: () => {
     const willStartPlaying = !get().isPlaying
+    const currentSong = get().currentSong
+
+    updateActivity(
+      willStartPlaying && currentSong
+        ? `Playing ${currentSong.title} by ${currentSong.artist}`
+        : 'Idle',
+    )
 
     set({ isPlaying: willStartPlaying })
   },
@@ -65,13 +94,17 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 
     if (nextIndex < queue.length) {
       const nextSong = queue[nextIndex]
+
       set({
         currentSong: nextSong,
         currentIndex: nextIndex,
         isPlaying: true,
       })
+
+      updateActivity(`Playing ${nextSong.title} by ${nextSong.artist}`)
     } else {
       set({ isPlaying: false })
+      updateActivity('Idle')
     }
   },
 
@@ -81,13 +114,17 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 
     if (prevIndex >= 0) {
       const prevSong = queue[prevIndex]
+
       set({
         currentSong: prevSong,
         currentIndex: prevIndex,
         isPlaying: true,
       })
+
+      updateActivity(`Playing ${prevSong.title} by ${prevSong.artist}`)
     } else {
       set({ isPlaying: false })
+      updateActivity('Idle')
     }
   },
 }))
