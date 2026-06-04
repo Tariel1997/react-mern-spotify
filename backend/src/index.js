@@ -1,21 +1,24 @@
-import fs from 'fs'
-import { createServer } from 'http'
-import path from 'path'
-import { clerkMiddleware } from '@clerk/express'
-import cors from 'cors'
-import dotenv from 'dotenv'
-import express from 'express'
-import fileupload from 'express-fileupload'
-import cron from 'node-cron'
+import fs from 'fs';
+import { createServer } from 'http';
+import path from 'path';
+import { clerkMiddleware } from '@clerk/express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import express from 'express';
+import fileupload from 'express-fileupload';
+import cron from 'node-cron';
 
-import { connectDB } from './lib/db.js'
-import { initializeSocket } from './lib/socket.js'
-import adminRoutes from './routes/admin.route.js'
-import albumRoutes from './routes/album.route.js'
-import authRoutes from './routes/auth.route.js'
-import songRoutes from './routes/song.route.js'
-import statRoutes from './routes/stat.route.js'
-import userRoutes from './routes/user.route.js'
+
+
+import { connectDB } from './lib/db.js';
+import { initializeSocket } from './lib/socket.js';
+import adminRoutes from './routes/admin.route.js';
+import albumRoutes from './routes/album.route.js';
+import authRoutes from './routes/auth.route.js';
+import songRoutes from './routes/song.route.js';
+import statRoutes from './routes/stat.route.js';
+import userRoutes from './routes/user.route.js';
+
 
 dotenv.config()
 
@@ -70,7 +73,7 @@ app.use('/api/stats', statRoutes)
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend/dist')))
-  app.get('.*', (req, res) => {
+  app.get(/^\/(?!api).*/, (req, res) => {
     res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'))
   })
 }
